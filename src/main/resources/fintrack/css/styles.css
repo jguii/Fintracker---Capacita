@@ -282,6 +282,20 @@
     -fx-pie-color: #e5e7eb;
 }
 
+/* legenda personalizada do gráfico (substitui a nativa) */
+.legenda-item {
+    -fx-text-fill: -ft-texto;
+    -fx-graphic-text-gap: 6;
+}
+
+.legenda-receita {
+    -fx-fill: -ft-receita;
+}
+
+.legenda-despesa {
+    -fx-fill: -ft-despesa;
+}
+
 .chart-legend {
     -fx-background-color: transparent;
 }

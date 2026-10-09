@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
 <!-- Relatório por período: totais, gráfico e extrato textual. -->
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
@@ -69,8 +70,23 @@
             </GridPane>
 
             <HBox spacing="14.0" VBox.vgrow="ALWAYS">
-                <PieChart fx:id="grafico" title="Receitas x Despesas" legendVisible="true"
-                          labelsVisible="false" prefWidth="340.0" minWidth="280.0"/>
+                <!-- Legenda própria: a legenda nativa exibiria a fatia auxiliar de animação -->
+                <VBox spacing="6.0" alignment="CENTER" prefWidth="340.0" minWidth="280.0">
+                    <PieChart fx:id="grafico" title="Receitas x Despesas" legendVisible="false"
+                              labelsVisible="false" animated="false" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="16.0" alignment="CENTER">
+                        <Label fx:id="lblLegendaReceitas" text="Receitas R$ 0,00" styleClass="legenda-item">
+                            <graphic>
+                                <Circle radius="6.0" styleClass="legenda-receita"/>
+                            </graphic>
+                        </Label>
+                        <Label fx:id="lblLegendaDespesas" text="Despesas R$ 0,00" styleClass="legenda-item">
+                            <graphic>
+                                <Circle radius="6.0" styleClass="legenda-despesa"/>
+                            </graphic>
+                        </Label>
+                    </HBox>
+                </VBox>
                 <TextArea fx:id="txtExtrato" editable="false" styleClass="extrato" HBox.hgrow="ALWAYS"/>
             </HBox>
         </VBox>
