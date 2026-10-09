@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Relatório por período: totais, gráfico e extrato textual. -->
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fintrack.controller.RelatorioController"
+            styleClass="raiz" prefWidth="860.0" prefHeight="620.0">
+
+    <!-- Filtro de período -->
+    <top>
+        <VBox spacing="10.0" styleClass="barra-ferramentas">
+            <Label styleClass="titulo-formulario" text="Relatório financeiro"/>
+            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                <Label text="De:"/>
+                <DatePicker fx:id="dpInicio" prefWidth="140.0"/>
+                <Label text="Até:"/>
+                <DatePicker fx:id="dpFim" prefWidth="140.0"/>
+                <Button text="Gerar" styleClass="botao-primario" defaultButton="true" onAction="#onGerar"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Mês atual" onAction="#onMesAtual"/>
+                <Button text="Ano atual" onAction="#onAnoAtual"/>
+                <Button text="Todo o período" onAction="#onTudo"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Totais + gráfico + extrato -->
+    <center>
+        <VBox spacing="14.0">
+            <padding>
+                <Insets top="14.0" right="16.0" bottom="8.0" left="16.0"/>
+            </padding>
+
+            <GridPane hgap="12.0">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                </columnConstraints>
+                <VBox styleClass="cartao, cartao-receita" GridPane.columnIndex="0" maxWidth="Infinity">
+                    <Label styleClass="cartao-titulo" text="Receitas"/>
+                    <Label fx:id="lblReceitas" styleClass="cartao-valor" text="R$ 0,00"/>
+                </VBox>
+                <VBox styleClass="cartao, cartao-despesa" GridPane.columnIndex="1" maxWidth="Infinity">
+                    <Label styleClass="cartao-titulo" text="Despesas"/>
+                    <Label fx:id="lblDespesas" styleClass="cartao-valor" text="R$ 0,00"/>
+                </VBox>
+                <VBox styleClass="cartao, cartao-saldo" GridPane.columnIndex="2" maxWidth="Infinity">
+                    <Label styleClass="cartao-titulo" text="Saldo do período"/>
+                    <Label fx:id="lblSaldo" styleClass="cartao-valor" text="R$ 0,00"/>
+                </VBox>
+                <VBox styleClass="cartao" GridPane.columnIndex="3" maxWidth="Infinity">
+                    <Label styleClass="cartao-titulo" text="Transações"/>
+                    <Label fx:id="lblQuantidade" styleClass="cartao-valor" text="0"/>
+                </VBox>
+            </GridPane>
+
+            <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+                <PieChart fx:id="grafico" title="Receitas x Despesas" legendVisible="true"
+                          labelsVisible="false" prefWidth="340.0" minWidth="280.0"/>
+                <TextArea fx:id="txtExtrato" editable="false" styleClass="extrato" HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <padding>
+                <Insets top="8.0" right="16.0" bottom="14.0" left="16.0"/>
+            </padding>
+            <Label fx:id="lblErro" styleClass="mensagem-erro"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Fechar" cancelButton="true" onAction="#onFechar"/>
+        </HBox>
+    </bottom>
+</BorderPane>
