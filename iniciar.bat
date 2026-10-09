@@ -1,20 +1,16 @@
 @echo off
 title FinTrack
 
-echo =========================================
-echo         INICIANDO O FINTRACK...
-echo =========================================
-echo.
-echo Por favor, aguarde enquanto o aplicativo e carregado.
-echo (Esta janela de comando pode ser fechada apos o uso)
-echo.
-
-call mvn javafx:run
-
-:: Se houver erro, pausa para o usuario poder ler
-if %errorlevel% neq 0 (
+if not exist target\fintrack.jar (
+    echo =========================================
+    echo   REALIZANDO A COMPILACAO DO PROJETO...
+    echo =========================================
     echo.
-    echo Ocorreu um erro ao iniciar o aplicativo. 
-    echo Verifique se o Maven (mvn) esta instalado e configurado corretamente.
-    pause
+    echo Essa etapa demora um pouquinho, mas so acontece na 
+    echo primeira vez ou quando o codigo e modificado.
+    echo Aguarde...
+    call mvnw package -DskipTests
 )
+
+:: javaw abre o aplicativo sem manter a janela preta aberta no fundo
+start "" javaw -jar target\fintrack.jar
