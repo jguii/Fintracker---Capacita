@@ -148,9 +148,9 @@ public class RelatorioController {
 
         javafx.animation.Timeline timeline = new javafx.animation.Timeline(
                 new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1.2),
-                        new javafx.animation.KeyValue(receitas.pieValueProperty(), valorReceitas, javafx.animation.Interpolator.EASE_OUT),
-                        new javafx.animation.KeyValue(despesas.pieValueProperty(), valorDespesas, javafx.animation.Interpolator.EASE_OUT),
-                        new javafx.animation.KeyValue(vazio.pieValueProperty(), 0, javafx.animation.Interpolator.EASE_OUT)
+                        new javafx.animation.KeyValue(receitas.pieValueProperty(), valorReceitas, javafx.animation.Interpolator.LINEAR),
+                        new javafx.animation.KeyValue(despesas.pieValueProperty(), valorDespesas, javafx.animation.Interpolator.LINEAR),
+                        new javafx.animation.KeyValue(vazio.pieValueProperty(), 0, javafx.animation.Interpolator.LINEAR)
                 )
         );
         timeline.play();
