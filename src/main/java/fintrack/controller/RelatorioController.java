@@ -115,17 +115,19 @@ public class RelatorioController {
         txtExtrato.setText(montarExtrato(transacoes, resumo, periodo));
     }
 
+    private javafx.animation.Timeline timelineAnimacao;
+
     private void atualizarGrafico(ResumoFinanceiro resumo) {
         String labelReceitas = "Receitas " + Formatador.formatarValor(resumo.totalReceitas());
         String labelDespesas = "Despesas " + Formatador.formatarValor(resumo.totalDespesas());
         double valorReceitas = resumo.totalReceitas().doubleValue();
         double valorDespesas = resumo.totalDespesas().doubleValue();
-        double total = valorReceitas + valorDespesas;
+        double novoTotal = valorReceitas + valorDespesas;
 
         if (grafico.getData().isEmpty()) {
             PieChart.Data receitas = new PieChart.Data(labelReceitas, 0);
             PieChart.Data despesas = new PieChart.Data(labelDespesas, 0);
-            PieChart.Data vazio = new PieChart.Data("vazio", total > 0 ? total : 1);
+            PieChart.Data vazio = new PieChart.Data("vazio", novoTotal > 0 ? novoTotal : 1);
             
             grafico.getData().addAll(receitas, despesas, vazio);
 
@@ -146,14 +148,21 @@ public class RelatorioController {
         receitas.setName(labelReceitas);
         despesas.setName(labelDespesas);
 
-        javafx.animation.Timeline timeline = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1.2),
+        double currentTotal = receitas.getPieValue() + despesas.getPieValue() + vazio.getPieValue();
+        double targetVazio = (novoTotal == 0) ? (currentTotal > 0 ? currentTotal : 1) : 0;
+
+        if (timelineAnimacao != null) {
+            timelineAnimacao.stop();
+        }
+
+        timelineAnimacao = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(0.75),
                         new javafx.animation.KeyValue(receitas.pieValueProperty(), valorReceitas, javafx.animation.Interpolator.LINEAR),
                         new javafx.animation.KeyValue(despesas.pieValueProperty(), valorDespesas, javafx.animation.Interpolator.LINEAR),
-                        new javafx.animation.KeyValue(vazio.pieValueProperty(), 0, javafx.animation.Interpolator.LINEAR)
+                        new javafx.animation.KeyValue(vazio.pieValueProperty(), targetVazio, javafx.animation.Interpolator.LINEAR)
                 )
         );
-        timeline.play();
+        timelineAnimacao.play();
     }
 
     private static String montarExtrato(List<Transacao> transacoes, ResumoFinanceiro resumo, String periodo) {
