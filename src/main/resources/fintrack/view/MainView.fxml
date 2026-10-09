@@ -50,10 +50,10 @@
     <center>
         <TableView fx:id="tabela" styleClass="tabela-transacoes">
             <columns>
-                <TableColumn fx:id="colData" text="Data" prefWidth="110.0"/>
-                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="420.0"/>
-                <TableColumn fx:id="colValor" text="Valor" prefWidth="160.0" styleClass="coluna-valor"/>
-                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="160.0"/>
+                <TableColumn fx:id="colData" text="Data" prefWidth="110.0" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="420.0" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colValor" text="Valor" prefWidth="160.0" styleClass="coluna-valor" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="160.0" style="-fx-alignment: CENTER;"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN"/>

@@ -116,11 +116,23 @@ public class RelatorioController {
     }
 
     private void atualizarGrafico(ResumoFinanceiro resumo) {
-        PieChart.Data receitas = new PieChart.Data(
-                "Receitas " + Formatador.formatarValor(resumo.totalReceitas()), resumo.totalReceitas().doubleValue());
-        PieChart.Data despesas = new PieChart.Data(
-                "Despesas " + Formatador.formatarValor(resumo.totalDespesas()), resumo.totalDespesas().doubleValue());
-        grafico.setData(FXCollections.observableArrayList(receitas, despesas));
+        String labelReceitas = "Receitas " + Formatador.formatarValor(resumo.totalReceitas());
+        String labelDespesas = "Despesas " + Formatador.formatarValor(resumo.totalDespesas());
+        double valorReceitas = resumo.totalReceitas().doubleValue();
+        double valorDespesas = resumo.totalDespesas().doubleValue();
+
+        if (grafico.getData().isEmpty()) {
+            grafico.getData().add(new PieChart.Data(labelReceitas, valorReceitas));
+            grafico.getData().add(new PieChart.Data(labelDespesas, valorDespesas));
+        } else {
+            PieChart.Data receitas = grafico.getData().get(0);
+            receitas.setName(labelReceitas);
+            receitas.setPieValue(valorReceitas);
+
+            PieChart.Data despesas = grafico.getData().get(1);
+            despesas.setName(labelDespesas);
+            despesas.setPieValue(valorDespesas);
+        }
     }
 
     private static String montarExtrato(List<Transacao> transacoes, ResumoFinanceiro resumo, String periodo) {

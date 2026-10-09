@@ -1,0 +1,283 @@
+/* =====================================================================
+   FinTrack - tema visual
+   Paleta: azul-petróleo (marca), verde (receita), vermelho (despesa)
+   ===================================================================== */
+
+.root {
+    -ft-primaria: #1e3a5f;
+    -ft-primaria-clara: #2e5c8a;
+    -ft-receita: #1b8a5a;
+    -ft-receita-fundo: #e6f4ed;
+    -ft-despesa: #c0392b;
+    -ft-despesa-fundo: #fbeaea;
+    -ft-fundo: #f4f6f9;
+    -ft-borda: #dde3ea;
+    -ft-texto: #2c3e50;
+    -ft-texto-suave: #6b7a8c;
+
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-base: #f4f6f9;
+    -fx-accent: -ft-primaria-clara;
+    -fx-focus-color: -ft-primaria-clara;
+    -fx-faint-focus-color: #2e5c8a22;
+}
+
+.raiz {
+    -fx-background-color: -ft-fundo;
+}
+
+/* ---------------------------------------------------------- cabeçalho */
+
+.cabecalho {
+    -fx-background-color: linear-gradient(to right, -ft-primaria, -ft-primaria-clara);
+    -fx-padding: 16 20 16 20;
+}
+
+.titulo-app {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.subtitulo-app {
+    -fx-text-fill: #c9d8ea;
+    -fx-font-size: 12px;
+}
+
+.barra-ferramentas {
+    -fx-background-color: white;
+    -fx-padding: 10 16 10 16;
+    -fx-border-color: transparent transparent -ft-borda transparent;
+}
+
+/* ------------------------------------------------------------ botões */
+
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+
+.botao-primario {
+    -fx-background-color: -ft-primaria-clara;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.botao-primario:hover {
+    -fx-background-color: -ft-primaria;
+}
+
+.botao-receita {
+    -fx-background-color: -ft-receita;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.botao-despesa {
+    -fx-background-color: -ft-despesa;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.botao-receita:hover, .botao-despesa:hover {
+    -fx-opacity: 0.88;
+}
+
+.botao-perigo {
+    -fx-text-fill: -ft-despesa;
+}
+
+.botao-claro {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 6;
+}
+
+.botao-claro:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* ------------------------------------------------------------ tabela */
+
+.tabela-transacoes {
+    -fx-background-color: white;
+    -fx-border-color: -ft-borda;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.tabela-transacoes .column-header,
+.tabela-transacoes .column-header-background,
+.tabela-transacoes .filler {
+    -fx-background-color: #eef2f7;
+}
+
+.tabela-transacoes .column-header .label {
+    -fx-text-fill: -ft-texto;
+    -fx-font-weight: bold;
+}
+
+.tabela-transacoes .table-row-cell {
+    -fx-cell-size: 34px;
+}
+
+.tabela-transacoes .table-row-cell:selected {
+    -fx-background-color: #d6e4f5;
+}
+
+.tabela-transacoes .table-row-cell:selected .table-cell {
+    -fx-text-fill: -ft-texto;
+}
+
+/* transações mensais (recorrentes) em itálico */
+.linha-recorrente .table-cell {
+    -fx-font-style: italic;
+}
+
+.coluna-valor {
+    -fx-alignment: CENTER;
+}
+
+.valor-positivo {
+    -fx-text-fill: -ft-receita;
+    -fx-font-weight: bold;
+}
+
+.valor-negativo {
+    -fx-text-fill: -ft-despesa;
+    -fx-font-weight: bold;
+}
+
+.tipo-receita {
+    -fx-text-fill: -ft-receita;
+}
+
+.tipo-despesa {
+    -fx-text-fill: -ft-despesa;
+}
+
+.placeholder {
+    -fx-text-fill: -ft-texto-suave;
+    -fx-font-size: 14px;
+}
+
+/* ------------------------------------------------- rodapé e cartões */
+
+.rodape {
+    -fx-padding: 0 16 14 16;
+}
+
+.cartao {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: -ft-borda;
+    -fx-border-radius: 8;
+    -fx-padding: 10 18 10 18;
+    -fx-spacing: 2;
+    -fx-min-width: 170;
+}
+
+.cartao-receita {
+    -fx-border-color: -ft-borda -ft-borda -ft-borda -ft-receita;
+    -fx-border-width: 1 1 1 4;
+}
+
+.cartao-despesa {
+    -fx-border-color: -ft-borda -ft-borda -ft-borda -ft-despesa;
+    -fx-border-width: 1 1 1 4;
+}
+
+.cartao-saldo {
+    -fx-border-color: -ft-borda -ft-borda -ft-borda -ft-primaria-clara;
+    -fx-border-width: 1 1 1 4;
+}
+
+.cartao-titulo {
+    -fx-text-fill: -ft-texto-suave;
+    -fx-font-size: 11px;
+}
+
+.cartao-valor {
+    -fx-text-fill: -ft-texto;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.cartao-receita .cartao-valor {
+    -fx-text-fill: -ft-receita;
+}
+
+.cartao-despesa .cartao-valor {
+    -fx-text-fill: -ft-despesa;
+}
+
+.status {
+    -fx-text-fill: -ft-texto-suave;
+}
+
+/* -------------------------------------------------------- formulário */
+
+.titulo-formulario {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -ft-primaria;
+}
+
+.formulario .label {
+    -fx-text-fill: -ft-texto;
+}
+
+.text-field, .text-area, .date-picker, .spinner {
+    -fx-background-radius: 6;
+}
+
+.radio-receita:selected .text {
+    -fx-fill: -ft-receita;
+    -fx-font-weight: bold;
+}
+
+.radio-despesa:selected .text {
+    -fx-fill: -ft-despesa;
+    -fx-font-weight: bold;
+}
+
+.campo-invalido,
+.campo-invalido > .text-field,
+.date-picker.campo-invalido > .text-field {
+    -fx-border-color: -ft-despesa;
+    -fx-border-radius: 6;
+    -fx-border-width: 1.5;
+}
+
+.mensagem-erro {
+    -fx-text-fill: -ft-despesa;
+    -fx-background-color: -ft-despesa-fundo;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+}
+
+/* ---------------------------------------------------------- relatório */
+
+.extrato {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 12.5px;
+}
+
+.chart-pie-label {
+    -fx-fill: -ft-texto;
+}
+
+.default-color0.chart-pie {
+    -fx-pie-color: -ft-receita;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: -ft-despesa;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
