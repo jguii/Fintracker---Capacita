@@ -5,6 +5,7 @@ import fintrack.exceptions.PersistenciaException;
 import fintrack.model.ResumoFinanceiro;
 import fintrack.model.Transacao;
 import fintrack.service.CalculadoraFinanceira;
+import fintrack.service.GeradorExtrato;
 import fintrack.service.TransacaoService;
 import fintrack.utils.Formatador;
 import javafx.animation.Interpolator;
@@ -16,7 +17,12 @@ import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -44,8 +50,12 @@ public class RelatorioController {
     @FXML private PieChart grafico;
     @FXML private Label lblLegendaReceitas;
     @FXML private Label lblLegendaDespesas;
-    @FXML private TextArea txtExtrato;
+    @FXML private Label lblTituloExtrato;
+    @FXML private VBox boxExtrato;
     @FXML private Label lblErro;
+
+    private List<Transacao> transacoesAtuais;
+    private String periodoAtual;
 
     // Fatias criadas uma única vez: índices fixos => cores fixas (default-color0/1/2 no CSS)
     private PieChart.Data fatiaReceitas;
@@ -109,7 +119,7 @@ public class RelatorioController {
 
     @FXML
     private void onFechar() {
-        ((Stage) txtExtrato.getScene().getWindow()).close();
+        ((Stage) boxExtrato.getScene().getWindow()).close();
     }
 
     // ------------------------------------------------------------ auxiliares
@@ -137,7 +147,10 @@ public class RelatorioController {
         lblQuantidade.setText(String.valueOf(resumo.quantidade()));
 
         atualizarGrafico(resumo);
-        txtExtrato.setText(montarExtrato(transacoes, resumo, periodo));
+        
+        this.transacoesAtuais = transacoes;
+        this.periodoAtual = periodo;
+        montarExtratoVisual(transacoes, resumo, periodo);
     }
 
     /**
@@ -178,22 +191,67 @@ public class RelatorioController {
         }
     }
 
-    private static String montarExtrato(List<Transacao> transacoes, ResumoFinanceiro resumo, String periodo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EXTRATO - ").append(periodo).append('\n').append(LINHA).append('\n');
+    @FXML
+    private void onCopiarExtrato() {
+        if (transacoesAtuais == null) return;
+        ClipboardContent content = new ClipboardContent();
+        content.putString(GeradorExtrato.gerarTexto(transacoesAtuais, periodoAtual));
+        Clipboard.getSystemClipboard().setContent(content);
+    }
+
+    private void montarExtratoVisual(List<Transacao> transacoes, ResumoFinanceiro resumo, String periodo) {
+        lblTituloExtrato.setText("EXTRATO - " + periodo);
+        boxExtrato.getChildren().clear();
+
         if (transacoes.isEmpty()) {
-            sb.append("Nenhuma transação no período.\n");
+            boxExtrato.getChildren().add(new Label("Nenhuma transação no período."));
+            return;
         }
-        transacoes.stream()
-                .sorted(Comparator.comparing(Transacao::getData).thenComparing(Transacao::getDescricao))
-                .forEach(t -> sb.append(String.format("%-10s  %-30.30s %16s%n",
-                        Formatador.formatarData(t.getData()),
-                        t.getDescricao() + (t.isRecorrente() ? " (mensal)" : ""),
-                        Formatador.formatarValor(t.getValorComSinal()))));
-        sb.append(LINHA).append('\n')
-                .append(String.format("%-42s %16s%n", "Total de receitas:", Formatador.formatarValor(resumo.totalReceitas())))
-                .append(String.format("%-42s %16s%n", "Total de despesas:", Formatador.formatarValor(resumo.totalDespesas())))
-                .append(String.format("%-42s %16s%n", "SALDO:", Formatador.formatarValor(resumo.saldo())));
-        return sb.toString();
+
+        var porMes = CalculadoraFinanceira.agruparPorMes(transacoes);
+        boolean agrupar = porMes.size() > 1;
+
+        for (var entry : porMes.entrySet()) {
+            if (agrupar) {
+                Label mesLabel = new Label(Formatador.formatarMesAno(entry.getKey()).toUpperCase(Formatador.PT_BR));
+                mesLabel.getStyleClass().add("extrato-mes-titulo");
+                boxExtrato.getChildren().add(mesLabel);
+            }
+
+            boolean impar = false;
+            for (Transacao t : entry.getValue()) {
+                HBox linha = new HBox(10);
+                linha.getStyleClass().add("extrato-linha");
+                if (impar) linha.getStyleClass().add("extrato-linha-impar");
+
+                Label lblData = new Label(Formatador.formatarData(t.getData()));
+                lblData.setPrefWidth(75);
+
+                Label lblDesc = new Label(t.getDescricao());
+                lblDesc.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(lblDesc, Priority.ALWAYS);
+
+                Label lblValor = new Label(Formatador.formatarValor(t.getValorComSinal()));
+                lblValor.setPrefWidth(90);
+                lblValor.getStyleClass().add(t.getValorComSinal().signum() >= 0 ? "valor-positivo" : "valor-negativo");
+                lblValor.setStyle("-fx-alignment: center-right;");
+
+                linha.getChildren().addAll(lblData, lblDesc, lblValor);
+
+                if (t.isRecorrente()) {
+                    Label lblMensal = new Label("Mensal");
+                    lblMensal.getStyleClass().add("extrato-etiqueta");
+                    linha.getChildren().add(lblMensal);
+                } else {
+                    // Preencher o espaço para os valores alinharem
+                    Region espaco = new Region();
+                    espaco.setPrefWidth(45);
+                    linha.getChildren().add(espaco);
+                }
+
+                boxExtrato.getChildren().add(linha);
+                impar = !impar;
+            }
+        }
     }
 }

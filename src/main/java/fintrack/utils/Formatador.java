@@ -3,6 +3,7 @@ package fintrack.utils;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
@@ -19,6 +20,8 @@ public final class Formatador {
     private static final DateTimeFormatter FORMATO_DATA =
             DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
 
+    private static final DateTimeFormatter FORMATO_MES_ANO = DateTimeFormatter.ofPattern("MMMM/uuuu", PT_BR);
+
     private Formatador() {
         // classe utilitária
     }
@@ -32,6 +35,12 @@ public final class Formatador {
 
     public static String formatarData(LocalDate data) {
         return data == null ? "" : data.format(FORMATO_DATA);
+    }
+
+    /** Ex.: 2026-10 -> "Outubro/2026". */
+    public static String formatarMesAno(YearMonth mes) {
+        String texto = mes.format(FORMATO_MES_ANO);
+        return Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
     }
 
     public static LocalDate parseData(String texto) throws DateTimeParseException {

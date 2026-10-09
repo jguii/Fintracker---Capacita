@@ -6,7 +6,13 @@ import fintrack.model.Transacao;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.YearMonth;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Cálculos financeiros puros (sem estado, sem I/O) — fáceis de testar.
@@ -46,5 +52,17 @@ public final class CalculadoraFinanceira {
         BigDecimal receitas = somarPorTipo(transacoes, TipoTransacao.RECEITA);
         BigDecimal despesas = somarPorTipo(transacoes, TipoTransacao.DESPESA);
         return new ResumoFinanceiro(receitas, despesas, receitas.subtract(despesas), transacoes.size());
+    }
+
+    /**
+     * Agrupa as transações por mês, em ordem cronológica. Dentro de cada mês, ordena por data
+     * e depois por descrição.
+     */
+    public static SortedMap<YearMonth, List<Transacao>> agruparPorMes(Collection<? extends Transacao> transacoes) {
+        return transacoes.stream()
+                .map(t -> (Transacao) t)
+                .sorted(Comparator.comparing(Transacao::getData)
+                        .thenComparing(Transacao::getDescricao, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.groupingBy(t -> YearMonth.from(t.getData()), TreeMap::new, Collectors.toList()));
     }
 }
