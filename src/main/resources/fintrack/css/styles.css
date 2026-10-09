@@ -278,6 +278,10 @@
     -fx-pie-color: -ft-despesa;
 }
 
+.default-color2.chart-pie {
+    -fx-pie-color: #e5e7eb;
+}
+
 .chart-legend {
     -fx-background-color: transparent;
 }
