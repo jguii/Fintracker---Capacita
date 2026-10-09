@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
+import java.util.SortedMap;
 
 /**
  * Controller da tela de relatório/saldo ({@code RelatorioView.fxml}).
@@ -208,10 +209,10 @@ public class RelatorioController {
             return;
         }
 
-        var porMes = CalculadoraFinanceira.agruparPorMes(transacoes);
+        SortedMap<YearMonth, List<Transacao>> porMes = CalculadoraFinanceira.agruparPorMes(transacoes);
         boolean agrupar = porMes.size() > 1;
 
-        for (var entry : porMes.entrySet()) {
+        for (java.util.Map.Entry<YearMonth, List<Transacao>> entry : porMes.entrySet()) {
             if (agrupar) {
                 Label mesLabel = new Label(Formatador.formatarMesAno(entry.getKey()).toUpperCase(Formatador.PT_BR));
                 mesLabel.getStyleClass().add("extrato-mes-titulo");
@@ -226,9 +227,11 @@ public class RelatorioController {
 
                 Label lblData = new Label(Formatador.formatarData(t.getData()));
                 lblData.setPrefWidth(75);
+                lblData.getStyleClass().add("extrato-texto");
 
                 Label lblDesc = new Label(t.getDescricao());
                 lblDesc.setMaxWidth(Double.MAX_VALUE);
+                lblDesc.getStyleClass().add("extrato-texto");
                 HBox.setHgrow(lblDesc, Priority.ALWAYS);
 
                 Label lblValor = new Label(Formatador.formatarValor(t.getValorComSinal()));

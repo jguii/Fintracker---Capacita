@@ -91,7 +91,7 @@
                     <HBox alignment="CENTER">
                         <Label fx:id="lblTituloExtrato" text="EXTRATO" styleClass="titulo-extrato"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="Copiar extrato" styleClass="botao-claro" onAction="#onCopiarExtrato"/>
+                        <Button text="Copiar extrato" onAction="#onCopiarExtrato"/>
                     </HBox>
                     <ScrollPane fitToWidth="true" styleClass="scroll-extrato" VBox.vgrow="ALWAYS">
                         <VBox fx:id="boxExtrato" styleClass="lista-extrato"/>

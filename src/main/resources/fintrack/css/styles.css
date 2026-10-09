@@ -306,6 +306,10 @@
     -fx-background-color: #f9fbfd;
 }
 
+.extrato-texto {
+    -fx-text-fill: -ft-texto;
+}
+
 .extrato-etiqueta {
     -fx-background-color: #e6f0fa;
     -fx-text-fill: #2e5c8a;
