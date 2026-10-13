@@ -1,5 +1,6 @@
 package fintrack.service;
 
+import fintrack.dao.TransacaoDAO;
 import fintrack.exceptions.EntradaInvalidaException;
 import fintrack.model.ResumoFinanceiro;
 import fintrack.model.TipoTransacao;
@@ -58,6 +59,9 @@ public class TransacaoService extends ServicoGenerico<Transacao, Long> {
 
     public List<Transacao> listarPorPeriodo(LocalDate inicio, LocalDate fim) throws EntradaInvalidaException {
         validarPeriodo(inicio, fim);
+        if (repositorio instanceof TransacaoDAO dao) {
+            return dao.listarPorPeriodo(inicio, fim);
+        }
         return listar(t -> !t.getData().isBefore(inicio) && !t.getData().isAfter(fim));
     }
 

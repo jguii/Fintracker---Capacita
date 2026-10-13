@@ -66,8 +66,10 @@ mvn clean test
 ```bash
 mvn clean package
 ```
-Isto gerará um arquivo executável na pasta `target/fintrack-2.0.0-shaded.jar`. 
+Isto gerará um arquivo executável na pasta `target/fintrack.jar`. 
 Para executá-lo independentemente:
 ```bash
-java -jar target/fintrack-2.0.0-shaded.jar
+java -jar target/fintrack.jar
 ```
+Ou simplesmente dê um duplo clique no arquivo **`iniciar.bat`** (no Windows).
+

@@ -11,10 +11,12 @@ import fintrack.utils.Formatador;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
@@ -37,7 +39,6 @@ import java.util.SortedMap;
  */
 public class RelatorioController {
 
-    private static final String LINHA = "-".repeat(64);
     private static final Duration DURACAO_ANIMACAO = Duration.seconds(1.0);
 
     private final TransacaoService service;
@@ -52,6 +53,7 @@ public class RelatorioController {
     @FXML private Label lblLegendaReceitas;
     @FXML private Label lblLegendaDespesas;
     @FXML private Label lblTituloExtrato;
+    @FXML private Button btnCopiarExtrato;
     @FXML private VBox boxExtrato;
     @FXML private Label lblErro;
 
@@ -198,6 +200,13 @@ public class RelatorioController {
         ClipboardContent content = new ClipboardContent();
         content.putString(GeradorExtrato.gerarTexto(transacoesAtuais, periodoAtual));
         Clipboard.getSystemClipboard().setContent(content);
+
+        if (btnCopiarExtrato != null) {
+            btnCopiarExtrato.setText("Copiado!");
+            PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+            pausa.setOnFinished(e -> btnCopiarExtrato.setText("Copiar extrato"));
+            pausa.play();
+        }
     }
 
     private void montarExtratoVisual(List<Transacao> transacoes, ResumoFinanceiro resumo, String periodo) {
@@ -205,7 +214,9 @@ public class RelatorioController {
         boxExtrato.getChildren().clear();
 
         if (transacoes.isEmpty()) {
-            boxExtrato.getChildren().add(new Label("Nenhuma transação no período."));
+            Label lblVazio = new Label("Nenhuma transação no período.");
+            lblVazio.getStyleClass().add("extrato-texto");
+            boxExtrato.getChildren().add(lblVazio);
             return;
         }
 
@@ -256,5 +267,17 @@ public class RelatorioController {
                 impar = !impar;
             }
         }
+
+        // Rodapé do extrato exibindo apenas o Saldo do período
+        HBox linhaSaldo = new HBox(10);
+        linhaSaldo.getStyleClass().add("extrato-rodape-saldo");
+        Label lblRotuloSaldo = new Label("SALDO:");
+        lblRotuloSaldo.getStyleClass().add("extrato-texto-destaque");
+        Region espacoSaldo = new Region();
+        HBox.setHgrow(espacoSaldo, Priority.ALWAYS);
+        Label lblValorSaldo = new Label(Formatador.formatarValor(resumo.saldo()));
+        lblValorSaldo.getStyleClass().addAll("extrato-texto-destaque", resumo.isPositivo() ? "valor-positivo" : "valor-negativo");
+        linhaSaldo.getChildren().addAll(lblRotuloSaldo, espacoSaldo, lblValorSaldo);
+        boxExtrato.getChildren().add(linhaSaldo);
     }
 }

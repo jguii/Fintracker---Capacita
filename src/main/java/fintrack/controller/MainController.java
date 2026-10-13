@@ -11,6 +11,7 @@ import fintrack.ui.Alertas;
 import fintrack.ui.Celulas;
 import fintrack.ui.GerenciadorTelas;
 import fintrack.utils.Formatador;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,7 +80,7 @@ public class MainController {
         tabela.setItems(ordenadas);
 
         // Botões só ficam habilitados com uma linha selecionada
-        var semSelecao = tabela.getSelectionModel().selectedItemProperty().isNull();
+        BooleanBinding semSelecao = tabela.getSelectionModel().selectedItemProperty().isNull();
         btnEditar.disableProperty().bind(semSelecao);
         btnRemover.disableProperty().bind(semSelecao);
 

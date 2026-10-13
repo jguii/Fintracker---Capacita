@@ -319,6 +319,18 @@
     -fx-background-radius: 4;
 }
 
+.extrato-rodape-saldo {
+    -fx-padding: 10 8 6 8;
+    -fx-border-color: -ft-borda transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.extrato-texto-destaque {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: -ft-texto;
+}
+
 .chart-pie-label {
     -fx-fill: -ft-texto;
 }

@@ -85,7 +85,7 @@ public class Transacao implements Identificavel<Long> {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public final void setDescricao(String descricao) {
         if (descricao == null || descricao.isBlank()) {
             throw new IllegalArgumentException("A descrição não pode estar vazia!");
         }
@@ -96,7 +96,7 @@ public class Transacao implements Identificavel<Long> {
         return valor;
     }
 
-    public void setValor(BigDecimal valor) {
+    public final void setValor(BigDecimal valor) {
         if (valor == null || valor.signum() <= 0) {
             throw new IllegalArgumentException("O valor deve ser maior que zero!");
         }
@@ -107,7 +107,7 @@ public class Transacao implements Identificavel<Long> {
         return tipo;
     }
 
-    public void setTipo(TipoTransacao tipo) {
+    public final void setTipo(TipoTransacao tipo) {
         this.tipo = Objects.requireNonNull(tipo, "O tipo da transação é obrigatório!");
     }
 
@@ -115,7 +115,7 @@ public class Transacao implements Identificavel<Long> {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public final void setData(LocalDate data) {
         if (data == null) {
             throw new IllegalArgumentException("A data não pode ser nula!");
         }
@@ -126,8 +126,27 @@ public class Transacao implements Identificavel<Long> {
         return observacao;
     }
 
-    public void setObservacao(String observacao) {
+    public final void setObservacao(String observacao) {
         this.observacao = (observacao == null || observacao.isBlank()) ? null : observacao.trim();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transacao transacao = (Transacao) o;
+        if (id != null && transacao.id != null) {
+            return Objects.equals(id, transacao.id);
+        }
+        return Objects.equals(descricao, transacao.descricao)
+                && Objects.equals(valor, transacao.valor)
+                && tipo == transacao.tipo
+                && Objects.equals(data, transacao.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? Objects.hashCode(id) : Objects.hash(descricao, valor, tipo, data);
     }
 
     @Override

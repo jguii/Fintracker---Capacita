@@ -47,15 +47,13 @@ public final class GeradorExtrato {
                 sb.append(formatarLinha(t)).append('\n');
             }
             if (agrupar) {
-                sb.append(linhaTotal("Subtotal do mês:", CalculadoraFinanceira.calcularSaldo(doMes).toString(),
+                sb.append(linhaTotal("Subtotal do mês:",
                         Formatador.formatarValor(CalculadoraFinanceira.calcularSaldo(doMes)), true));
             }
         });
 
         sb.append(LINHA).append('\n')
-                .append(linhaTotal("Total de receitas:", null, Formatador.formatarValor(resumo.totalReceitas()), false))
-                .append(linhaTotal("Total de despesas:", null, Formatador.formatarValor(resumo.totalDespesas()), false))
-                .append(linhaTotal("SALDO DO PERÍODO:", null, Formatador.formatarValor(resumo.saldo()), false));
+                .append(linhaTotal("SALDO DO PERÍODO:", Formatador.formatarValor(resumo.saldo()), false));
         return sb.toString();
     }
 
@@ -76,7 +74,7 @@ public final class GeradorExtrato {
         return linha.stripTrailing();
     }
 
-    private static String linhaTotal(String rotulo, String ignorado, String valor, boolean alinharDireita) {
+    private static String linhaTotal(String rotulo, String valor, boolean alinharDireita) {
         String formato = alinharDireita
                 ? "%" + LARGURA_ROTULO + "s %" + LARGURA_VALOR + "s%n"
                 : "%-" + LARGURA_ROTULO + "s %" + LARGURA_VALOR + "s%n";

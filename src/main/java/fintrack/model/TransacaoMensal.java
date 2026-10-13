@@ -29,7 +29,7 @@ public class TransacaoMensal extends Transacao {
         return diaDoMes;
     }
 
-    public void setDiaDoMes(int diaDoMes) {
+    public final void setDiaDoMes(int diaDoMes) {
         if (diaDoMes < 1 || diaDoMes > 31) {
             throw new IllegalArgumentException("O dia do mês deve estar entre 1 e 31!");
         }

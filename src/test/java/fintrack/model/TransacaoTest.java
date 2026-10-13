@@ -75,4 +75,29 @@ class TransacaoTest {
         // Se a referência já passou do dia, vai pro próximo mês
         assertEquals(LocalDate.of(2024, 2, 29), t.proximaOcorrencia(LocalDate.of(2024, 1, 31).plusDays(1)));
     }
+
+    @Test
+    void igualdadePorId() {
+        Transacao t1 = new Transacao("Mercado", new BigDecimal("100"), TipoTransacao.DESPESA, LocalDate.now());
+        t1.setId(42L);
+
+        Transacao t2 = new Transacao("Outro Mercado", new BigDecimal("200"), TipoTransacao.RECEITA, LocalDate.now());
+        t2.setId(42L);
+
+        assertEquals(t1, t2);
+        assertEquals(t1.hashCode(), t2.hashCode());
+    }
+
+    @Test
+    void igualdadeSemIdPorCampos() {
+        LocalDate hoje = LocalDate.now();
+        Transacao t1 = new Transacao("Mercado", new BigDecimal("100"), TipoTransacao.DESPESA, hoje);
+        Transacao t2 = new Transacao("Mercado", new BigDecimal("100"), TipoTransacao.DESPESA, hoje);
+
+        assertEquals(t1, t2);
+        assertEquals(t1.hashCode(), t2.hashCode());
+
+        Transacao diferente = new Transacao("Luz", new BigDecimal("100"), TipoTransacao.DESPESA, hoje);
+        org.junit.jupiter.api.Assertions.assertNotEquals(t1, diferente);
+    }
 }
