@@ -1,0 +1,9 @@
+# =====================================================================
+# FinTrack - Configuração de Conexão com o MySQL
+# Renomeie ou copie este arquivo para 'db.properties' e preencha a senha.
+# O arquivo 'db.properties' é ignorado pelo Git para proteger suas credenciais.
+# =====================================================================
+
+db.url=jdbc:mysql://localhost:3306/fintrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&characterEncoding=UTF-8
+db.user=root
+db.password=

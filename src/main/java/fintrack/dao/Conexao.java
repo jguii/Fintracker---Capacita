@@ -11,78 +11,84 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Ponto único de acesso ao banco de dados.
+ * Ponto único de acesso ao banco de dados MySQL (e H2 em memória nos testes).
  * <p>
- * Centraliza a URL JDBC, a verificação do driver e a criação do schema.
- * Cada operação do DAO obtém uma {@link Connection} nova via {@link #obterConexao()}
- * e a fecha com try-with-resources — evitando vazamento de conexões.
- *
- * <ul>
- *   <li>{@link #padrao()} — arquivo {@code ~/.fintrack/fintrack.db}
- *       (ou a URL da propriedade de sistema {@value #PROPRIEDADE_URL});</li>
- *   <li>{@link #emMemoria()} — SQLite em memória, isolado, ideal para testes.</li>
- * </ul>
+ * Centraliza a URL JDBC, credenciais, verificação do driver e criação do schema.
+ * As credenciais são carregadas do arquivo local {@code db.properties} (ignorado no Git),
+ * ou de propriedades do sistema/variáveis padrão.
  */
 public final class Conexao implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(Conexao.class.getName());
 
-    /** Permite apontar para outro banco: {@code -Dfintrack.db.url=jdbc:sqlite:C:/dados/fin.db}. */
     public static final String PROPRIEDADE_URL = "fintrack.db.url";
-    private static final String DRIVER = "org.sqlite.JDBC";
+    public static final String PROPRIEDADE_USER = "fintrack.db.user";
+    public static final String PROPRIEDADE_PASSWORD = "fintrack.db.password";
+
+    private static final String DRIVER_MYSQL = "com.mysql.cj.jdbc.Driver";
+    private static final String DRIVER_H2 = "org.h2.Driver";
     private static final String SCRIPT_SCHEMA = "/db/schema.sql";
 
     private final String url;
+    private final String usuario;
+    private final String senha;
 
     /**
-     * Um banco SQLite em memória existe apenas enquanto houver uma conexão aberta.
-     * Esta conexão "âncora" mantém o banco vivo entre as operações do DAO.
+     * No H2 em memória, uma conexão âncora mantém o banco vivo entre operações.
      */
     private Connection conexaoAncora;
 
-    private Conexao(String url, boolean manterAberta) {
-        verificarDriver();
+    private Conexao(String url, String usuario, String senha, boolean manterAberta) {
+        verificarDriver(url);
         this.url = url;
+        this.usuario = usuario;
+        this.senha = senha;
         if (manterAberta) {
             try {
-                this.conexaoAncora = DriverManager.getConnection(url);
+                this.conexaoAncora = obterConexao();
             } catch (SQLException e) {
                 throw new PersistenciaException("Não foi possível abrir o banco em memória", e);
             }
         }
     }
 
-    /** Banco padrão da aplicação (arquivo local). */
+    /** Banco padrão da aplicação: lê do arquivo db.properties ou propriedades do sistema. */
     public static Conexao padrao() {
-        String url = System.getProperty(PROPRIEDADE_URL);
-        if (url == null || url.isBlank()) {
-            Path arquivo = Path.of(System.getProperty("user.home"), ".fintrack", "fintrack.db");
-            criarDiretorio(arquivo.getParent());
-            url = "jdbc:sqlite:" + arquivo.toAbsolutePath();
-        }
-        return new Conexao(url, false);
+        Properties config = carregarConfiguracao();
+
+        String url = System.getProperty(PROPRIEDADE_URL, config.getProperty("db.url",
+                "jdbc:mysql://localhost:3306/fintrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&characterEncoding=UTF-8"));
+        String usuario = System.getProperty(PROPRIEDADE_USER, config.getProperty("db.user", "root"));
+        String senha = System.getProperty(PROPRIEDADE_PASSWORD, config.getProperty("db.password", ""));
+
+        return new Conexao(url, usuario, senha, false);
     }
 
-    /** Banco a partir de uma URL JDBC explícita. */
-    public static Conexao paraUrl(String url) {
-        return new Conexao(url, false);
+    /** Conexão explícita com credenciais. */
+    public static Conexao paraUrl(String url, String usuario, String senha) {
+        return new Conexao(url, usuario, senha, false);
     }
 
     /**
-     * Banco SQLite em memória com cache compartilhado e nome único:
-     * cada instância é um banco limpo e isolado (perfeito para {@code @BeforeEach}).
+     * Banco H2 em memória com modo de compatibilidade MySQL:
+     * limpo, isolado e ultrarrápido para suíte de testes unitários.
      */
     public static Conexao emMemoria() {
-        String nome = "fintrack-" + UUID.randomUUID();
-        return new Conexao("jdbc:sqlite:file:" + nome + "?mode=memory&cache=shared", true);
+        String nome = "fintrack_" + UUID.randomUUID().toString().replace("-", "");
+        String url = "jdbc:h2:mem:" + nome + ";MODE=MySQL;DATABASE_TO_LOWER=TRUE";
+        return new Conexao(url, "sa", "", true);
     }
 
     public Connection obterConexao() throws SQLException {
+        if (usuario != null) {
+            return DriverManager.getConnection(url, usuario, senha);
+        }
         return DriverManager.getConnection(url);
     }
 
@@ -95,14 +101,21 @@ public final class Conexao implements AutoCloseable {
         String script = lerScript();
         try (Connection con = obterConexao(); Statement st = con.createStatement()) {
             for (String comando : script.split(";")) {
-                if (!comando.isBlank()) {
-                    st.execute(comando);
+                String sql = comando.trim();
+                if (!sql.isBlank()) {
+                    st.execute(sql);
                 }
             }
-            LOG.info(() -> "Banco de dados inicializado: " + url);
+            LOG.info(() -> "Banco de dados inicializado com sucesso: " + url);
         } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "Falha ao criar o schema do banco", e);
-            throw new PersistenciaException("Falha ao inicializar o banco de dados", e);
+            LOG.log(Level.SEVERE, "Falha ao inicializar o banco de dados", e);
+            if (e.getErrorCode() == 1045 || (e.getMessage() != null && e.getMessage().contains("Access denied"))) {
+                throw new PersistenciaException("Falha de autenticação no MySQL. Verifique o usuário e a senha no arquivo 'db.properties'.", e);
+            }
+            if (e.getErrorCode() == 1049 || (e.getMessage() != null && e.getMessage().contains("Unknown database"))) {
+                throw new PersistenciaException("O banco de dados 'fintrack' não foi encontrado no MySQL. Execute 'CREATE DATABASE fintrack;' no MySQL.", e);
+            }
+            throw new PersistenciaException("Falha ao inicializar o banco de dados: " + e.getMessage(), e);
         }
     }
 
@@ -112,7 +125,7 @@ public final class Conexao implements AutoCloseable {
             try {
                 conexaoAncora.close();
             } catch (SQLException e) {
-                LOG.log(Level.WARNING, "Erro ao fechar a conexão em memória", e);
+                LOG.log(Level.WARNING, "Erro ao fechar a conexão âncora", e);
             } finally {
                 conexaoAncora = null;
             }
@@ -121,20 +134,26 @@ public final class Conexao implements AutoCloseable {
 
     // ------------------------------------------------------------- auxiliares
 
-    private static void verificarDriver() {
+    private static void verificarDriver(String url) {
+        String driver = url.startsWith("jdbc:h2:") ? DRIVER_H2 : DRIVER_MYSQL;
         try {
-            Class.forName(DRIVER);
+            Class.forName(driver);
         } catch (ClassNotFoundException e) {
-            throw new PersistenciaException("Driver JDBC não encontrado no classpath: " + DRIVER, e);
+            throw new PersistenciaException("Driver JDBC não encontrado no classpath: " + driver, e);
         }
     }
 
-    private static void criarDiretorio(Path diretorio) {
-        try {
-            Files.createDirectories(diretorio);
-        } catch (IOException e) {
-            throw new PersistenciaException("Não foi possível criar o diretório " + diretorio, e);
+    private static Properties carregarConfiguracao() {
+        Properties props = new Properties();
+        Path arquivo = Path.of("db.properties");
+        if (Files.exists(arquivo)) {
+            try (InputStream in = Files.newInputStream(arquivo)) {
+                props.load(in);
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Não foi possível ler o arquivo db.properties", e);
+            }
         }
+        return props;
     }
 
     /** Lê o script e remove comentários "--" para facilitar a divisão por ";". */

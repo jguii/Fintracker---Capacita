@@ -14,9 +14,10 @@ A versão 2.0 do projeto consolida conceitos avançados de Java e padrões de pr
 * **FXML e Scene Builder:** Telas separadas em `.fxml`, vinculadas ao seu respectivo Controller via `fx:controller`.
 * **CSS:** Aparência totalmente personalizada utilizando a folha de estilos `styles.css` para cartões de saldo e formatação de valores e erros.
 
-### 2. Banco de Dados JDBC (SQLite)
-* **Persistência:** Implementação de `TransacaoDAO` que persiste e busca dados no arquivo `~/.fintrack/fintrack.db`.
-* **SQLite em Memória:** Capacidade de gerar bancos em memória para isolar testes unitários e de integração (`Conexao.emMemoria()`).
+### 2. Banco de Dados JDBC (MySQL)
+* **Persistência:** Implementação de `TransacaoDAO` que persiste e busca dados no servidor MySQL (`localhost:3306/fintrack`).
+* **Segurança de Credenciais:** As credenciais de acesso ficam isoladas no arquivo local `db.properties` (ignorado pelo `.gitignore`), prevenindo exposição de senhas no repositório. O arquivo `db.properties.example` serve como modelo de configuração.
+* **Testes com Banco em Memória:** A suíte de testes utiliza H2 configurado em modo de compatibilidade com MySQL (`MODE=MySQL`), permitindo rodar os 32 testes unitários e de integração de forma isolada e ultrarrápida sem poluir a base real.
 * **Segurança e Transações:** Utilização extensiva de `PreparedStatement` (prevenção contra SQL Injection) e blocos transacionais explícitos (`commit()` e `rollback()`) na adição em lote.
 
 ### 3. Generics e Curingas (Wildcards)
