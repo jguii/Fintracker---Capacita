@@ -5,6 +5,7 @@ import fintrack.exceptions.PersistenciaException;
 import fintrack.model.ResumoFinanceiro;
 import fintrack.model.TipoTransacao;
 import fintrack.model.Transacao;
+import fintrack.model.TransacaoMensal;
 import fintrack.service.CalculadoraFinanceira;
 import fintrack.service.TransacaoService;
 import fintrack.ui.Alertas;
@@ -26,6 +27,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 
 import java.math.BigDecimal;
@@ -64,6 +66,16 @@ public class MainController {
     @FXML private Label lblSaldo;
     @FXML private Label lblStatus;
 
+    @FXML private VBox painelDetalhes;
+    @FXML private Label lblDetalheTipo;
+    @FXML private Label lblDetalheRecorrente;
+    @FXML private Label lblDetalheValor;
+    @FXML private Label lblDetalheDescricao;
+    @FXML private Label lblDetalheData;
+    @FXML private VBox boxDetalheDia;
+    @FXML private Label lblDetalheDia;
+    @FXML private Label lblDetalheObservacao;
+
     public MainController(TransacaoService service, GerenciadorTelas telas) {
         this.service = service;
         this.telas = telas;
@@ -83,6 +95,15 @@ public class MainController {
         BooleanBinding semSelecao = tabela.getSelectionModel().selectedItemProperty().isNull();
         btnEditar.disableProperty().bind(semSelecao);
         btnRemover.disableProperty().bind(semSelecao);
+
+        painelDetalhes.managedProperty().bind(painelDetalhes.visibleProperty());
+        tabela.getSelectionModel().selectedItemProperty().addListener((obs, antigo, selecionada) -> {
+            if (selecionada != null) {
+                exibirDetalhes(selecionada);
+            } else {
+                fecharDetalhes();
+            }
+        });
 
         txtBusca.textProperty().addListener((obs, antigo, novo) -> aplicarFiltro());
         chkMesAtual.selectedProperty().addListener((obs, antigo, novo) -> aplicarFiltro());
@@ -111,7 +132,7 @@ public class MainController {
         tabela.getSortOrder().add(colData);
     }
 
-    /** Duplo clique em uma linha abre a edição; linhas mensais recebem destaque. */
+    /** Duplo clique em uma linha abre a edição; clique simples exibe detalhes; linhas mensais recebem destaque. */
     private void configurarLinhas() {
         tabela.setRowFactory(tv -> {
             TableRow<Transacao> linha = new TableRow<>() {
@@ -125,8 +146,12 @@ public class MainController {
                 }
             };
             linha.setOnMouseClicked(evento -> {
-                if (evento.getButton() == MouseButton.PRIMARY && evento.getClickCount() == 2 && !linha.isEmpty()) {
-                    abrirFormulario(linha.getItem(), null);
+                if (evento.getButton() == MouseButton.PRIMARY && !linha.isEmpty()) {
+                    if (evento.getClickCount() == 2) {
+                        abrirFormulario(linha.getItem(), null);
+                    } else if (evento.getClickCount() == 1) {
+                        exibirDetalhes(linha.getItem());
+                    }
                 }
             });
             return linha;
@@ -185,6 +210,11 @@ public class MainController {
         recarregar();
     }
 
+    @FXML
+    private void onFecharDetalhes() {
+        fecharDetalhes();
+    }
+
     // -------------------------------------------------------------- auxiliares
 
     /** Abre o formulário: {@code existente != null} = edição; caso contrário, nova transação. */
@@ -204,10 +234,68 @@ public class MainController {
         }
     }
 
+    private void exibirDetalhes(Transacao t) {
+        if (t == null) {
+            fecharDetalhes();
+            return;
+        }
+
+        lblDetalheTipo.setText(t.isReceita() ? "Receita" : "Despesa");
+        lblDetalheTipo.getStyleClass().setAll("badge-detalhe", t.isReceita() ? "badge-receita" : "badge-despesa");
+
+        lblDetalheRecorrente.setVisible(t.isRecorrente());
+        lblDetalheRecorrente.setManaged(t.isRecorrente());
+
+        lblDetalheValor.setText(Formatador.formatarValor(t.getValorComSinal()));
+        lblDetalheValor.getStyleClass().setAll("detalhe-valor", t.isReceita() ? "valor-positivo" : "valor-negativo");
+
+        lblDetalheDescricao.setText(t.getDescricao());
+        lblDetalheData.setText(Formatador.formatarData(t.getData()));
+
+        if (t instanceof TransacaoMensal) {
+            TransacaoMensal tm = (TransacaoMensal) t;
+            lblDetalheDia.setText("Dia " + tm.getDiaDoMes());
+            boxDetalheDia.setVisible(true);
+            boxDetalheDia.setManaged(true);
+        } else {
+            boxDetalheDia.setVisible(false);
+            boxDetalheDia.setManaged(false);
+        }
+
+        String obs = t.getObservacao();
+        if (obs != null && !obs.isBlank()) {
+            lblDetalheObservacao.setText(obs);
+            lblDetalheObservacao.getStyleClass().setAll("observacao-texto");
+        } else {
+            lblDetalheObservacao.setText("Nenhuma observação informada.");
+            lblDetalheObservacao.getStyleClass().setAll("observacao-texto", "observacao-vazia");
+        }
+
+        painelDetalhes.setVisible(true);
+    }
+
+    private void fecharDetalhes() {
+        painelDetalhes.setVisible(false);
+    }
+
     private void recarregar() {
         try {
+            Transacao selecionadaAntes = tabela.getSelectionModel().getSelectedItem();
+            Long idAntes = selecionadaAntes != null ? selecionadaAntes.getId() : null;
+
             transacoes.setAll(service.listar());
             atualizarResumo();
+
+            if (idAntes != null) {
+                for (Transacao t : tabela.getItems()) {
+                    if (idAntes.equals(t.getId())) {
+                        tabela.getSelectionModel().select(t);
+                        exibirDetalhes(t);
+                        return;
+                    }
+                }
+            }
+            fecharDetalhes();
         } catch (PersistenciaException e) {
             Alertas.erro(janela(), "Erro ao carregar transações", e.getMessage());
         }

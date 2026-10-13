@@ -364,3 +364,103 @@
 .chart-legend {
     -fx-background-color: transparent;
 }
+
+/* --------------------------------------------------- painel de detalhes */
+
+.painel-detalhes {
+    -fx-background-color: white;
+    -fx-border-color: -ft-borda;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 14 16 14 16;
+}
+
+.titulo-painel-detalhes {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -ft-primaria;
+}
+
+.botao-fechar-detalhes {
+    -fx-background-color: transparent;
+    -fx-text-fill: -ft-texto-suave;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 6 2 6;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.botao-fechar-detalhes:hover {
+    -fx-background-color: #eef2f7;
+    -fx-text-fill: -ft-texto;
+}
+
+.badge-detalhe {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8 3 8;
+    -fx-background-radius: 4;
+}
+
+.badge-receita {
+    -fx-background-color: -ft-receita-fundo;
+    -fx-text-fill: -ft-receita;
+}
+
+.badge-despesa {
+    -fx-background-color: -ft-despesa-fundo;
+    -fx-text-fill: -ft-despesa;
+}
+
+.badge-recorrente {
+    -fx-background-color: #e6f0fa;
+    -fx-text-fill: #2e5c8a;
+}
+
+.detalhe-campo-rotulo {
+    -fx-text-fill: -ft-texto-suave;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.detalhe-valor {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.detalhe-campo-valor {
+    -fx-text-fill: -ft-texto;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.scroll-observacao {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-control-inner-background: #fafbfc;
+    -fx-border-color: -ft-borda;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.scroll-observacao .viewport {
+    -fx-background-color: #fafbfc;
+    -fx-background-radius: 5;
+}
+
+.caixa-observacao {
+    -fx-background-color: #fafbfc;
+    -fx-padding: 8 10 8 10;
+}
+
+.observacao-texto {
+    -fx-text-fill: -ft-texto;
+    -fx-font-size: 12px;
+}
+
+.observacao-vazia {
+    -fx-text-fill: -ft-texto-suave;
+    -fx-font-style: italic;
+}
+
