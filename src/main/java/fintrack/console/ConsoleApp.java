@@ -20,8 +20,9 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Versão console original do FinTrack, agora usando a mesma camada de serviço e o
- * mesmo banco de dados da interface gráfica (os dados são compartilhados).
+ * Interface em linha de comando (CLI) do FinTrack.
+ * <p>
+ * Permite operações de terminal compartilhando a mesma camada de serviço e persistência da interface gráfica.
  */
 public class ConsoleApp {
 

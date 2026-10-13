@@ -38,9 +38,9 @@ public interface Repositorio<T extends Identificavel<ID>, ID> {
     int contar();
 
     /**
-     * Salva vários registros. O curinga {@code ? extends T} permite passar, por exemplo,
-     * um {@code List<TransacaoMensal>} para um {@code Repositorio<Transacao, Long>}
-     * (o parâmetro é apenas <em>lido</em> — princípio PECS: "Producer Extends").
+     * Salva múltiplos registros em lote.
+     *
+     * @param entidades registros a serem persistidos
      */
     default void salvarTodos(Collection<? extends T> entidades) {
         for (T entidade : entidades) {

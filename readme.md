@@ -1,76 +1,153 @@
-# FinTrack — Controle Financeiro Pessoal (v2)
+# FinTrack — Sistema de Gestão Financeira Pessoal
 
-## Visão Geral
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![JavaFX](https://img.shields.io/badge/JavaFX-21-2C3E50?style=for-the-badge&logo=java&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-3.9-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![JUnit 5](https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
 
-O FinTrack é um sistema de controle financeiro pessoal que permite ao usuário cadastrar receitas e despesas, listar transações, exibir o saldo e filtrar por período. Originalmente construído apenas para execução no console, agora na **versão 2.0** ele evoluiu para incluir uma interface gráfica rica e persistência em banco de dados.
+O **FinTrack** é uma aplicação desktop para gestão financeira pessoal desenvolvida em **Java 21** e **JavaFX**. Projetado com foco em usabilidade, precisão contábil e arquitetura limpa, o sistema oferece controle completo de receitas, despesas e transações recorrentes, persistência robusta em **MySQL** e relatórios visuais com gráficos.
 
-## Novas Tecnologias Utilizadas na v2
+---
 
-A versão 2.0 do projeto consolida conceitos avançados de Java e padrões de projeto:
+## Recursos do Sistema
 
-### 1. JavaFX — Interface Gráfica
-* **Telas:** `MainView` (tabela de transações e resumo mensal), `TransacaoFormView` (formulário de inserção e edição) e `RelatorioView` (gráfico e extrato textual).
-* **Componentes:** TableView, TableColumn, CheckBox, DatePicker, Spinner, PieChart, TextArea, etc.
-* **FXML e Scene Builder:** Telas separadas em `.fxml`, vinculadas ao seu respectivo Controller via `fx:controller`.
-* **CSS:** Aparência totalmente personalizada utilizando a folha de estilos `styles.css` para cartões de saldo e formatação de valores e erros.
+- **Gestão de Lançamentos**: Cadastro, edição, listagem e remoção de receitas e despesas com validação imediata de dados.
+- **Painel Lateral de Detalhes**: Painel retrátil na tela principal que apresenta metadados completos, valores formatados, badges de identificação e visualização integral do campo de **observações** com rolagem dinâmica.
+- **Transações Recorrentes Mensais**: Suporte a lançamentos fixos (salários, aluguel, assinaturas), com dia de competência configurável e destaque visual diferenciado na tabela.
+- **Filtros e Busca em Tempo Real**: Consulta instantânea por descrição e filtro de exibição para o mês corrente.
+- **Relatório e Extrato com Gráfico**: Modal de fechamento mensal com gráfico interativo proporcional (receitas vs. despesas), indicador de saldo consolidado e extrato textual com função de cópia para a área de transferência.
+- **Múltiplas Interfaces**:
+  - **Interface Gráfica (Desktop)** via JavaFX, responsiva e com tema visual personalizado.
+  - **Interface de Terminal (CLI)** com suporte às mesmas operações e compartilhamento da base de dados.
 
-### 2. Banco de Dados JDBC (MySQL)
-* **Persistência:** Implementação de `TransacaoDAO` que persiste e busca dados no servidor MySQL (`localhost:3306/fintrack`).
-* **Segurança de Credenciais:** As credenciais de acesso ficam isoladas no arquivo local `db.properties` (ignorado pelo `.gitignore`), prevenindo exposição de senhas no repositório. O arquivo `db.properties.example` serve como modelo de configuração.
-* **Testes com Banco em Memória:** A suíte de testes utiliza H2 configurado em modo de compatibilidade com MySQL (`MODE=MySQL`), permitindo rodar os 32 testes unitários e de integração de forma isolada e ultrarrápida sem poluir a base real.
-* **Segurança e Transações:** Utilização extensiva de `PreparedStatement` (prevenção contra SQL Injection) e blocos transacionais explícitos (`commit()` e `rollback()`) na adição em lote.
+---
 
-### 3. Generics e Curingas (Wildcards)
-* **Repositório Genérico:** A interface `Repositorio<T extends Identificavel<ID>, ID>` isola as operações CRUD, implementada por `RepositorioGenerico` (em memória) e adaptada no `TransacaoDAO` (banco).
-* **Serviços:** `ServicoGenerico` implementa o padrão *Template Method*, reutilizando a lógica de "validar -> salvar".
-* **Curingas (Wildcards):** Demonstração do padrão PECS (Producer Extends, Consumer Super). Uso de `?`, `? extends T` (ex. para ler coleções de subclasses como `TransacaoMensal`) e `? super T` (ex. para `Predicate` e `Comparator`).
+## Arquitetura e Engenharia de Software
 
-### 4. Testes de Software com JUnit 5
-* Testes unitários para entidades (`TransacaoTest`, `CalculadoraFinanceiraTest`).
-* Testes de integração em banco em memória (`TransacaoDAOTest`) garantindo o funcionamento do DAO de forma independente e isolada.
+- **Precisão Financeira**: Operações monetárias calculadas com `BigDecimal` e arredondamento contábil padrão (`HALF_EVEN`).
+- **Padrão MVC + DAO**: Separação clara entre camada visual (FXML e CSS), lógica de aplicação (Controllers), serviços de domínio e camada de acesso a dados (JDBC com MySQL).
+- **Segurança de Dados**: Todas as operações de persistência utilizam `PreparedStatement` para prevenir injeção de SQL e blocos transacionais explícitos (`commit` e `rollback`).
+- **Suíte de Testes Automatizados**: 32 testes unitários e de integração com JUnit 5. Os testes utilizam banco H2 em memória com compatibilidade MySQL (`MODE=MySQL`), executando de forma isolada, rápida e sem dependência de banco externo ativo.
 
-## Estrutura do Projeto (Maven)
+---
 
-O projeto migrou para a estrutura padrão do Maven (`src/main/java`, `src/main/resources`, `src/test/java`).
+## Pré-requisitos
 
-* **fintrack.app** — Contém o `FinApp` (ciclo de vida JavaFX) e o `Launcher`.
-* **fintrack.console** — A interface console original que agora reaproveita a camada de banco de dados e os serviços genéricos da interface gráfica.
-* **fintrack.controller** — Controllers das telas do JavaFX, ligados ao FXML.
-* **fintrack.dao** — Acesso a banco com JDBC (SQLite).
-* **fintrack.exceptions** — Exceções de persistência e validação.
-* **fintrack.model** — Entidades (`Transacao`, `TransacaoMensal`, `TipoTransacao`, `ResumoFinanceiro`).
-* **fintrack.repository** — Interface padrão de acesso a dados e implementação genérica em memória.
-* **fintrack.service** — Camada que contém as regras de negócio antes de persistir no DAO.
-* **fintrack.ui** — Factories, formatadores e alertas para o JavaFX.
-* **fintrack.utils** — Utilitários de data, coleções e formatação.
+- **Java Development Kit (JDK) 21** ou superior instalado.
+- **MySQL Server 8.0+** ativo na porta `3306`.
+- *(Opcional)* Apache Maven. O projeto já inclui o **Maven Wrapper** (`mvnw` / `mvnw.cmd`).
 
-## Como Executar
+---
 
-Se você tiver o Apache Maven e o JDK instalados, pode utilizar os plugins configurados:
+## Instalação e Configuração
 
-**Executar a interface gráfica (JavaFX):**
+### 1. Clonar o repositório
 ```bash
-mvn clean javafx:run
+git clone https://github.com/SEU-USUARIO/fintrack.git
+cd fintrack
 ```
 
-**Executar a versão Console:**
-```bash
-mvn clean exec:java
+### 2. Criar a base de dados no MySQL
+Execute o comando abaixo no MySQL para criar o schema da aplicação:
+```sql
+CREATE DATABASE fintrack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-**Rodar os testes automatizados:**
-```bash
-mvn clean test
+### 3. Configurar as credenciais de acesso
+Copie o arquivo de exemplo para gerar o seu arquivo local de configuração:
+
+- **Windows (PowerShell):**
+  ```powershell
+  Copy-Item db.properties.example db.properties
+  ```
+- **Linux / macOS:**
+  ```bash
+  cp db.properties.example db.properties
+  ```
+
+Edite o arquivo `db.properties` com suas credenciais do MySQL:
+```properties
+db.url=jdbc:mysql://localhost:3306/fintrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&characterEncoding=UTF-8
+db.user=root
+db.password=sua_senha
 ```
 
-**Empacotar o projeto em um JAR (Fat JAR/Uber JAR):**
-```bash
-mvn clean package
-```
-Isto gerará um arquivo executável na pasta `target/fintrack.jar`. 
-Para executá-lo independentemente:
-```bash
-java -jar target/fintrack.jar
-```
-Ou simplesmente dê um duplo clique no arquivo **`iniciar.bat`** (no Windows).
+---
 
+## Executando o Projeto
+
+### Inicialização Rápida no Windows
+Dê um duplo clique no arquivo **`iniciar.bat`** na raiz do projeto. Ele compila automaticamente o executável caso seja a primeira execução e abre o FinTrack diretamente.
+
+### Via Linha de Comando (Maven Wrapper)
+
+- **Executar Interface Gráfica (JavaFX):**
+  ```bash
+  ./mvnw javafx:run
+  # Windows:
+  .\mvnw.cmd javafx:run
+  ```
+
+- **Executar Interface em Linha de Comando (Console):**
+  ```bash
+  ./mvnw exec:java
+  # Windows:
+  .\mvnw.cmd exec:java
+  ```
+
+- **Executar a Suíte de Testes:**
+  ```bash
+  ./mvnw test
+  # Windows:
+  .\mvnw.cmd test
+  ```
+
+- **Empacotar em arquivo JAR executável:**
+  ```bash
+  ./mvnw package -DskipTests
+  # Windows:
+  .\mvnw.cmd package -DskipTests
+  ```
+  O arquivo gerado estará localizado em `target/fintrack.jar` e pode ser iniciado com:
+  ```bash
+  java -jar target/fintrack.jar
+  ```
+
+---
+
+## Estrutura de Diretórios
+
+```text
+fintrack/
+├── .gitignore
+├── db.properties.example      # Modelo de configuração de banco de dados
+├── iniciar.bat                # Script de execução rápida no Windows
+├── mvnw / mvnw.cmd            # Apache Maven Wrapper
+├── pom.xml                    # Configuração de dependências e build
+├── src/
+│   ├── main/
+│   │   ├── java/fintrack/
+│   │   │   ├── app/           # Launcher e ciclo de vida da aplicação
+│   │   │   ├── console/       # Interface de linha de comando (CLI)
+│   │   │   ├── controller/    # Controllers das telas JavaFX
+│   │   │   ├── dao/           # Conexão e persistência JDBC com MySQL
+│   │   │   ├── exceptions/    # Exceções de negócio e persistência
+│   │   │   ├── model/         # Entidades de domínio (Transacao, etc.)
+│   │   │   ├── repository/    # Abstração de repositórios e coleções
+│   │   │   ├── service/       # Regras de negócio e cálculos financeiros
+│   │   │   ├── ui/            # Formatação de células, diálogos e gerenciador de telas
+│   │   │   └── utils/         # Formatadores monetários e de datas
+│   │   └── resources/
+│   │       ├── db/            # Script DDL de criação do schema SQL
+│   │       └── fintrack/
+│   │           ├── css/       # Folhas de estilo da aplicação (styles.css)
+│   │           └── view/      # Arquivos de interface FXML
+│   └── test/java/fintrack/    # 32 testes automatizados com JUnit 5 e H2
+```
+
+---
+
+## Licença
+
+Distribuído sob a licença **MIT**.

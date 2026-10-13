@@ -48,7 +48,7 @@ public final class Colecoes {
         return origem.size();
     }
 
-    /** Retorna o elemento na posição (1-based) usada nos menus de console. */
+    /** Retorna o elemento pelo índice 1-based informado. */
     public static <T> T elementoNaPosicao(List<? extends T> lista, int posicao) {
         if (posicao < 1 || posicao > lista.size()) {
             throw new IndexOutOfBoundsException("Posição inválida: " + posicao);

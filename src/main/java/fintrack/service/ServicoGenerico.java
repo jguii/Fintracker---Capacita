@@ -37,7 +37,7 @@ public abstract class ServicoGenerico<T extends Identificavel<ID>, ID> {
         return repositorio.salvar(entidade);
     }
 
-    /** Valida todos antes de gravar qualquer um ({@code ? extends T}: aceita subtipos). */
+    /** Valida e persiste múltiplos registros em lote. */
     public void adicionarTodos(Collection<? extends T> entidades) throws EntradaInvalidaException {
         for (T entidade : entidades) {
             exigirNaoNulo(entidade);
@@ -69,7 +69,7 @@ public abstract class ServicoGenerico<T extends Identificavel<ID>, ID> {
         return repositorio.listarTodos();
     }
 
-    /** {@code Predicate<? super T>}: aceita filtros escritos para T ou supertipos. */
+    /** Filtra registros de acordo com o predicado informado. */
     public List<T> listar(Predicate<? super T> filtro) {
         return repositorio.listarTodos().stream().filter(filtro).toList();
     }

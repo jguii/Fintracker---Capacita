@@ -8,17 +8,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Entidade central do sistema: uma receita ou despesa.
+ * Entidade central do sistema: representa uma transação financeira (receita ou despesa).
  * <p>
- * Melhorias em relação à versão console:
- * <ul>
- *   <li>{@link BigDecimal} no lugar de {@code double} — evita erros de arredondamento
- *       em valores monetários (ex.: 0.1 + 0.2 != 0.3 com double);</li>
- *   <li>{@link TipoTransacao} no lugar de {@code boolean ehReceita};</li>
- *   <li>{@code id} para permitir persistência em banco de dados;</li>
- *   <li>campo {@code observacao} opcional (editado via TextArea na interface);</li>
- *   <li>invariantes garantidas também nos setters, não só no construtor.</li>
- * </ul>
+ * Mantém invariantes de domínio, controle monetário preciso via {@link BigDecimal}
+ * e suporte a observações adicionais.
  */
 public class Transacao implements Identificavel<Long> {
 

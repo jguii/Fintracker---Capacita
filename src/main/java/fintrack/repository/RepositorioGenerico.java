@@ -36,8 +36,7 @@ public class RepositorioGenerico<T extends Identificavel<ID>, ID> implements Rep
     private final Supplier<? extends ID> geradorDeId;
 
     /**
-     * @param geradorDeId estratégia de geração de ids. {@code ? extends ID} permite,
-     *                    por exemplo, um {@code Supplier<Integer>} num repositório de {@code Number}.
+     * @param geradorDeId estratégia de geração de identificadores
      */
     public RepositorioGenerico(Supplier<? extends ID> geradorDeId) {
         this.geradorDeId = Objects.requireNonNull(geradorDeId, "geradorDeId");
@@ -105,13 +104,7 @@ public class RepositorioGenerico<T extends Identificavel<ID>, ID> implements Rep
         registros.clear();
     }
 
-    // ------------------------------------------------ operações com curingas
-
-    /**
-     * Filtra os registros. {@code Predicate<? super T>} aceita um predicado do próprio
-     * tipo ou de um supertipo — ex.: um {@code Predicate<Identificavel<Long>>} genérico
-     * pode filtrar um repositório de {@code Transacao} ("Consumer Super").
-     */
+    // ------------------------------------------------ operações de consulta
     public List<T> filtrar(Predicate<? super T> criterio) {
         List<T> resultado = new ArrayList<>();
         for (T registro : registros.values()) {
