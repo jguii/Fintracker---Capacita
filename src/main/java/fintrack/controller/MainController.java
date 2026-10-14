@@ -38,7 +38,7 @@ import java.util.function.Predicate;
 
 /**
  * Controller da tela principal ({@code MainView.fxml}).
- * <p>
+ *
  * Mantém uma {@link ObservableList} com as transações do banco, envolvida por
  * {@link FilteredList} (busca / mês atual) e {@link SortedList} (ordenação pelos cabeçalhos).
  */

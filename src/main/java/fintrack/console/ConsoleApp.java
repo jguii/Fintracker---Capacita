@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 /**
  * Interface em linha de comando (CLI) do FinTrack.
- * <p>
+ *
  * Permite operações de terminal compartilhando a mesma camada de serviço e persistência da interface gráfica.
  */
 public class ConsoleApp {

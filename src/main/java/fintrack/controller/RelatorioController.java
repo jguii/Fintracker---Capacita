@@ -158,8 +158,8 @@ public class RelatorioController {
 
     /**
      * Anima o gráfico em velocidade constante.
-     * <p>
-     * As fatias trabalham em <b>percentual</b> (receitas + despesas + vazio = 100 sempre). Como a soma
+     *
+     * As fatias trabalham em percentual (receitas + despesas + vazio = 100 sempre). Como a soma
      * nunca muda durante a interpolação linear, o ângulo de cada fatia varia de forma perfeitamente
      * uniforme. A animação interna do PieChart fica desligada ({@code animated="false"} no FXML), pois
      * ela aplicaria um EASE_BOTH de 500 ms a cada quadro e distorceria a velocidade.

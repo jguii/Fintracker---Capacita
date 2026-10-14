@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 /**
  * Fábrica genérica de células de tabela formatadas.
- * <p>
+ *
  * Um único método atende colunas de qualquer tipo de linha ({@code S}) e de valor
  * ({@code T}): datas, valores monetários, textos...
  */

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * Aplicação JavaFX do FinTrack.
- * <p>
+ *
  * Ciclo de vida: {@link #init()} (thread de background: prepara o banco) →
  * {@link #start(Stage)} (thread JavaFX: exibe a tela principal) → {@link #stop()} (libera recursos).
  */

@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 
 /**
  * Carrega telas FXML e injeta dependências nos controllers.
- * <p>
+ *
  * O FXML declara o controller com {@code fx:controller} (compatível com o Scene Builder);
- * aqui, a <i>controller factory</i> cria esse controller passando o serviço e o próprio
+ * aqui, a controller factory cria esse controller passando o serviço e o próprio
  * gerenciador pelo construtor — sem variáveis estáticas/globais.
  */
 public class GerenciadorTelas {

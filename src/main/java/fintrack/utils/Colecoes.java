@@ -5,15 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Métodos genéricos reutilizáveis que demonstram os três tipos de curinga.
- *
- * <table>
- *   <caption>Resumo (PECS - Producer Extends, Consumer Super)</caption>
- *   <tr><th>Curinga</th><th>Uso</th></tr>
- *   <tr><td>{@code ?}</td><td>tipo desconhecido; só operações que não dependem do tipo</td></tr>
- *   <tr><td>{@code ? extends T}</td><td>a coleção <em>produz</em> T (leitura)</td></tr>
- *   <tr><td>{@code ? super T}</td><td>a coleção <em>consome</em> T (escrita)</td></tr>
- * </table>
+ * Utilitários para operações em coleções genéricas (leitura, escrita e cópia).
  */
 public final class Colecoes {
 

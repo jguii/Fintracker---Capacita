@@ -24,15 +24,12 @@ import java.util.logging.Logger;
 
 /**
  * DAO (Data Access Object) da tabela {@code transacoes}.
- * <p>
- * Implementa o mesmo contrato genérico {@link Repositorio} que a lista em memória,
- * então o serviço não sabe (nem precisa saber) que os dados estão num banco.
- * <ul>
- *   <li>Todas as consultas usam {@link PreparedStatement} — protege contra SQL Injection;</li>
- *   <li>Recursos JDBC são fechados com try-with-resources;</li>
- *   <li>{@link SQLException} é registrada no log e convertida em {@link PersistenciaException};</li>
- *   <li>{@link #salvarTodos(Collection)} usa transação com {@code commit()}/{@code rollback()}.</li>
- * </ul>
+ *
+ * Implementa o contrato genérico {@link Repositorio}.
+ * - Todas as consultas usam {@link PreparedStatement} — protege contra SQL Injection;
+ * - Recursos JDBC são fechados com try-with-resources;
+ * - {@link SQLException} é registrada no log e convertida em {@link PersistenciaException};
+ * - {@link #salvarTodos(Collection)} usa transação com {@code commit()}/{@code rollback()}.
  */
 public class TransacaoDAO implements Repositorio<Transacao, Long> {
 

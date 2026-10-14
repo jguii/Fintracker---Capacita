@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * Cálculos financeiros puros (sem estado, sem I/O) — fáceis de testar.
- * <p>
+ *
  * Todos os métodos recebem {@code Collection<? extends Transacao>}: assim aceitam
  * {@code List<Transacao>}, {@code List<TransacaoMensal>}, {@code Set<...>} etc.
  */

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Camada de serviços e regras de negócio de transações financeiras.
- * <p>
+ *
  * Recebe qualquer {@code Repositorio<Transacao, Long>} por injeção de dependência:
  * {@link fintrack.dao.TransacaoDAO} em produção, {@link fintrack.repository.RepositorioGenerico}
  * nos testes ou em modo em memória.

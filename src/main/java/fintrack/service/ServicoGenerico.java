@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 /**
  * Serviço genérico com o fluxo padrão "validar -> persistir" reutilizável para
  * qualquer entidade. Subclasses só precisam implementar {@link #validar(Identificavel)}
- * (padrão <i>Template Method</i>).
+ * (padrão Template Method).
  *
  * @param <T>  tipo da entidade
  * @param <ID> tipo do identificador

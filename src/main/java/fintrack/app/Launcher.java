@@ -4,8 +4,8 @@ import javafx.application.Application;
 
 /**
  * Ponto de entrada do JAR executável.
- * <p>
- * Quando o JavaFX está no <i>classpath</i> (e não no <i>module path</i>), a JVM recusa
+ *
+ * Quando o JavaFX está no classpath (e não no module path), a JVM recusa
  * iniciar diretamente uma classe que estende {@link Application}
  * ("JavaFX runtime components are missing"). Esta classe intermediária contorna isso.
  */

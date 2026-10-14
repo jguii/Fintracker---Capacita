@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 /**
  * Transação recorrente mensal (ex.: salário, aluguel, assinatura).
- * <p>
+ *
  * Na interface gráfica é criada quando o CheckBox "Recorrente mensal" está marcado.
  * No banco, é identificada pela coluna {@code dia_recorrencia} preenchida.
  */

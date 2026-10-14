@@ -3,10 +3,9 @@ package fintrack.model;
 import java.math.BigDecimal;
 
 /**
- * Tipo de uma transação financeira.
- * <p>
- * Substitui o antigo campo {@code boolean ehReceita}: um enum é autoexplicativo,
- * extensível e pode ser persistido de forma legível no banco ("RECEITA"/"DESPESA").
+ * Tipo de uma transação financeira: receita ou despesa.
+ *
+ * Facilita a persistência legível no banco ("RECEITA"/"DESPESA") e operações de sinal contábil.
  */
 public enum TipoTransacao {
 

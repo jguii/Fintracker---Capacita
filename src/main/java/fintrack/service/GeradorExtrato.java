@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.SortedMap;
 
 /**
- * Gera o extrato em <b>texto puro</b> (usado pelo botão "Copiar extrato").
- * <p>
+ * Gera o extrato em texto puro (usado pelo botão "Copiar extrato").
+ *
  * Colunas de largura fixa: data | descrição | valor | (Mensal). Descrições longas são
  * abreviadas com "…" em vez de cortadas no meio, e a marcação de recorrência fica numa
  * coluna própria após o valor, mantendo os valores alinhados.

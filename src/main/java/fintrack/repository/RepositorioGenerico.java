@@ -16,10 +16,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Lista genérica de registros em memória, reutilizável para qualquer entidade.
- * <p>
- * Evolução direta da {@code List<Transacao>} do antigo {@code FinTracker}: a mesma lógica
- * de adicionar/listar/remover agora serve para <b>qualquer</b> tipo {@code T}.
+ * Implementação genérica de repositório em memória para entidades identificáveis.
  *
  * <pre>{@code
  * Repositorio<Transacao, Long> repo = RepositorioGenerico.comIdLong();
@@ -123,9 +120,9 @@ public class RepositorioGenerico<T extends Identificavel<ID>, ID> implements Rep
     }
 
     /**
-     * Copia todos os registros para um destino. {@code Collection<? super T>} permite
-     * copiar um repositório de {@code TransacaoMensal} para uma {@code List<Transacao>}
-     * ou até {@code List<Object>} — o destino apenas <em>consome</em> elementos.
+     * Copia todos os registros para a coleção de destino fornecida.
+     *
+     * @param destino coleção que receberá os registros
      */
     public void copiarPara(Collection<? super T> destino) {
         destino.addAll(registros.values());

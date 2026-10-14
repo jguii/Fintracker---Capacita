@@ -8,12 +8,11 @@ import java.util.Optional;
 
 /**
  * Contrato genérico de persistência (CRUD) para qualquer entidade identificável.
- * <p>
+ *
  * Implementações:
- * <ul>
- *   <li>{@link RepositorioGenerico} — lista em memória (testes / modo offline);</li>
- *   <li>{@link fintrack.dao.TransacaoDAO} — banco de dados via JDBC.</li>
- * </ul>
+ * - {@link RepositorioGenerico} — lista em memória (testes / modo offline);
+ * - {@link fintrack.dao.TransacaoDAO} — banco de dados via JDBC.
+ *
  * Como os serviços dependem desta interface (e não da implementação), trocar a forma
  * de armazenamento não exige nenhuma alteração nas regras de negócio.
  *

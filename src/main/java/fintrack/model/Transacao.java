@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * Entidade central do sistema: representa uma transação financeira (receita ou despesa).
- * <p>
+ *
  * Mantém invariantes de domínio, controle monetário preciso via {@link BigDecimal}
  * e suporte a observações adicionais.
  */
