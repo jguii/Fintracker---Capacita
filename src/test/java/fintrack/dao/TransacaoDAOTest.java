@@ -24,7 +24,7 @@ class TransacaoDAOTest {
 
     @BeforeEach
     void setUp() {
-        // Usa banco em memória (SQLite): rápido e isolado para cada teste
+        // Usa banco em memória (H2 em modo de compatibilidade MySQL): rápido e isolado para cada teste
         conexao = Conexao.emMemoria();
         conexao.inicializarBanco();
         dao = new TransacaoDAO(conexao);

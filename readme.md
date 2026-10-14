@@ -48,18 +48,20 @@ O **FinTrack** é uma aplicação desktop para gestão financeira pessoal desenv
 
 ### 1. Clonar o repositório
 ```bash
-git clone https://github.com/SEU-USUARIO/fintrack.git
-cd fintrack
+git clone https://github.com/jguii/Fintracker---Capacita.git
+cd Fintracker---Capacita
 ```
 
 ### 2. Criar a base de dados no MySQL
-Execute o comando abaixo no MySQL para criar o schema da aplicação:
+Execute o comando abaixo no MySQL para criar o banco da aplicação:
 ```sql
 CREATE DATABASE fintrack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
+> **Criação Automática de Tabelas:** Não é necessário rodar scripts SQL manuais para criar tabelas. O FinTrack verifica e executa automaticamente a estrutura de tabelas (`schema.sql`) na primeira inicialização da aplicação. Basta criar o banco `fintrack`.
+
 ### 3. Configurar as credenciais de acesso
-Copie o arquivo de exemplo para gerar o seu arquivo local de configuração:
+Copie o arquivo de exemplo para criar seu arquivo local de configuração na raiz do projeto:
 
 - **Windows (PowerShell):**
   ```powershell
@@ -81,10 +83,11 @@ db.password=sua_senha
 
 ## Executando o Projeto
 
-### Inicialização Rápida no Windows
-Dê um duplo clique no arquivo **`iniciar.bat`** na raiz do projeto. Ele compila automaticamente o executável caso seja a primeira execução e abre o FinTrack diretamente.
+### 🚀 Inicialização Rápida no Windows (1 Clique)
+Após configurar o arquivo `db.properties`, dê um **duplo clique no arquivo `iniciar.bat`** na raiz do projeto.
+O script cuida de tudo: compila e empacota o executável na primeira execução e abre o FinTrack diretamente.
 
-### Via Linha de Comando (Maven Wrapper)
+### 💻 Execução via Linha de Comando (Maven Wrapper)
 
 - **Executar Interface Gráfica (JavaFX):**
   ```bash
@@ -100,20 +103,20 @@ Dê um duplo clique no arquivo **`iniciar.bat`** na raiz do projeto. Ele compila
   .\mvnw.cmd exec:java
   ```
 
-- **Executar a Suíte de Testes:**
+- **Executar a Suíte de Testes Automatizados:**
   ```bash
   ./mvnw test
   # Windows:
   .\mvnw.cmd test
   ```
 
-- **Empacotar em arquivo JAR executável:**
+- **Gerar o Pacote Executável (.JAR):**
   ```bash
   ./mvnw package -DskipTests
   # Windows:
   .\mvnw.cmd package -DskipTests
   ```
-  O arquivo gerado estará localizado em `target/fintrack.jar` e pode ser iniciado com:
+  O executável gerado estará em `target/fintrack.jar` e pode ser iniciado com:
   ```bash
   java -jar target/fintrack.jar
   ```
