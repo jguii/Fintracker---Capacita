@@ -12,11 +12,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Regras de negócio de transações. Substitui o antigo {@code FinTracker}.
+ * Camada de serviços e regras de negócio de transações financeiras.
  * <p>
  * Recebe qualquer {@code Repositorio<Transacao, Long>} por injeção de dependência:
  * {@link fintrack.dao.TransacaoDAO} em produção, {@link fintrack.repository.RepositorioGenerico}
- * nos testes ou num modo "somente memória".
+ * nos testes ou em modo em memória.
  */
 public class TransacaoService extends ServicoGenerico<Transacao, Long> {
 

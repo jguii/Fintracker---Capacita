@@ -25,10 +25,14 @@ O **FinTrack** é uma aplicação desktop para gestão financeira pessoal desenv
 
 ## Arquitetura e Engenharia de Software
 
-- **Precisão Financeira**: Operações monetárias calculadas com `BigDecimal` e arredondamento contábil padrão (`HALF_EVEN`).
-- **Padrão MVC + DAO**: Separação clara entre camada visual (FXML e CSS), lógica de aplicação (Controllers), serviços de domínio e camada de acesso a dados (JDBC com MySQL).
-- **Segurança de Dados**: Todas as operações de persistência utilizam `PreparedStatement` para prevenir injeção de SQL e blocos transacionais explícitos (`commit` e `rollback`).
-- **Suíte de Testes Automatizados**: 32 testes unitários e de integração com JUnit 5. Os testes utilizam banco H2 em memória com compatibilidade MySQL (`MODE=MySQL`), executando de forma isolada, rápida e sem dependência de banco externo ativo.
+- **Padrões de Projeto**:
+  - **MVC (Model-View-Controller)**: Separação estrutural estrita entre a camada visual declarativa (`FXML` e `CSS`), controladores reativos de tela (`MainController`, `RelatorioController`, `TransacaoFormController`) e modelos de domínio.
+  - **DAO (Data Access Object)**: Desacoplamento da persistência através do contrato `Repositorio`, permitindo trocar ou estender o mecanismo de dados sem impacto nas regras de negócio.
+  - **Template Method**: Reutilização do pipeline padronizado de validação e persistência na classe abstrata `ServicoGenerico`.
+  - **Generics & Wildcards**: Tipagem estrita com tipos limitados (`<T extends Identificavel<ID>, ID>`) e curingas (`? extends T`, `? super T`), assegurando polimorfismo seguro em operações em lote e predicados de filtro.
+- **Precisão Monetária**: Todos os cálculos contábeis utilizam `BigDecimal` com escala fixa de 2 casas decimais e arredondamento bancário (`HALF_EVEN`), eliminando erros de ponto flutuante típicos de `double`/`float`.
+- **Segurança e Transações**: Todas as operações SQL são parametrizadas via `PreparedStatement` (blindagem contra SQL Injection) e operações em lote contam com controle transacional explícito (`commit()` e `rollback()`).
+- **Suíte de Testes Automatizados**: Cobertura de 32 testes unitários e de integração com JUnit 5. A suíte executa sobre banco H2 em memória em modo de compatibilidade com MySQL (`MODE=MySQL`), garantindo testes 100% isolados, ultrarrápidos e independentes de serviços externos ativos.
 
 ---
 

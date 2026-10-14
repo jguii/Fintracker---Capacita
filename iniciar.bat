@@ -12,9 +12,7 @@ if not exist target\fintrack.jar (
     echo   REALIZANDO A COMPILACAO DO PROJETO...
     echo =========================================
     echo.
-    echo Essa etapa demora um pouquinho, mas so acontece na 
-    echo primeira vez ou quando o codigo for recompilado.
-    echo Aguarde...
+    echo Gerando pacote executavel inicial. Aguarde...
     call mvnw.cmd package -DskipTests
     if errorlevel 1 (
         echo.

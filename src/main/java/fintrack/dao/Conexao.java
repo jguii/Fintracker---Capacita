@@ -20,8 +20,7 @@ import java.util.logging.Logger;
  * Ponto único de acesso ao banco de dados MySQL (e H2 em memória nos testes).
  * <p>
  * Centraliza a URL JDBC, credenciais, verificação do driver e criação do schema.
- * As credenciais são carregadas do arquivo local {@code db.properties} (ignorado no Git),
- * ou de propriedades do sistema/variáveis padrão.
+ * As credenciais são carregadas do arquivo {@code db.properties} ou de propriedades do sistema.
  */
 public final class Conexao implements AutoCloseable {
 
